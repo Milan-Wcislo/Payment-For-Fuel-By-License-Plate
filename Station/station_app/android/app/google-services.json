@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "672610472310",
+    "project_id": "station-e40cc",
+    "storage_bucket": "station-e40cc.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:672610472310:android:c0a97719d305977aceea57",
+        "android_client_info": {
+          "package_name": "com.example.station_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAEYD0ug9D9VDqcDNHVeb7uN0YvcZDI1hw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

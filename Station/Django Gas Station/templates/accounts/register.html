@@ -1,0 +1,95 @@
+{% extends "base.html" %} {% load static %} {% block content %} 
+{% include 'partials/_alerts.html' %} 
+<div class="form-wrapper">
+    
+    <form id="wizard" action="" method="POST">
+        {% csrf_token %}
+        <!-- SECTION 1 -->
+        <h2></h2>
+        <section>
+            <div class="inner">
+                <div class="row mr-0">
+                    <div class="image-holder col-md-5">
+                        <img src="{% static 'img/register.jpg' %}" alt="" />
+                    </div>
+                    <div class="form-content col-md-7">
+                        <div class="form-header">
+                            <h3>Register New User</h3>
+                        </div>
+                        <div class="form-group">
+                            {{ user_form.username }}
+                        </div>
+                        <div class="form-group">
+                            {{ user_form.email }}
+                        </div>
+                        <div class="form-group">
+                            {{ user_form.password1 }}
+                        </div>
+                        <div class="form-group">
+                            {{ user_form.password2 }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 2 -->
+        <h2></h2>
+        <section>
+            <div class="inner">
+                <div class="row">
+                    <div class="image-holder col-md-5">
+                        <img src="{% static 'img/car.jpg' %}" alt="" />
+                    </div>
+                    <div class="form-content col-md-7">
+                        <div class="form-header">
+                            <h3>Add Your Vehicle</h3>
+                        </div>
+                        <div class="form-group">
+                            {{ vehicle_form.license_plate }}
+                        </div>
+                        <div class="form-group">
+                            {{ vehicle_form.engine_type }}
+                        </div>
+                        <div class="form-group">
+                            {{ vehicle_form.brand }}
+                        </div>
+                        <div class="form-group">
+                            {{ vehicle_form.model }} 
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- SECTION 3 -->
+        <h2></h2>
+        <section>
+            <div class="inner">
+                <div class="row">
+                    <div class="image-holder col-md-5">
+                        <img src="{% static 'img/regulation.jpg' %}" alt="" />
+                    </div>
+                        <div class="form-content col-md-7">
+                            <div class="form-header">
+                                <h3>Sign The Regulations</h3>
+                            </div>
+                            <div class="form-group form-check">
+                                <input type="checkbox" class="form-check-input" id="checkRegulation1">
+                                <label class="form-check-label" for="checkRegulation1"><b>* I consent</b> to the reading of my vehicle registration plate at gas stations.
+                                </label>
+                            </div>
+                            <div class="form-group">
+                                <input
+                                    type="submit"
+                                    class="form-control"
+                                    value="Sign Up"
+                                />
+                            </div>
+                        </div>
+                </div>
+            </div>
+        </section>
+    </form>
+</div>
+{% endblock %}

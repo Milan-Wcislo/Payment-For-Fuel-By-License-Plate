@@ -1,0 +1,56 @@
+{% extends "base.html" %} {% block content %} 
+{% include "partials/_header.html" %}
+<main>
+    <section id="coupons">
+        <div class="container py-5">
+            {% include "partials/_alerts.html" %}
+            <h2 class="text-center pb-5">Coupons List</h2>
+            <table class="table table-striped">
+                <thead class="thead-dark">
+                    <tr>
+                        <th class="align-middle"></th>
+                        <th class="align-middle">Product</th>
+                        <th class="align-middle">Coupon</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for coupon in coupons %}
+                        <tr>
+                            <td class="align-middle">
+                                <img src="{{ coupon.product_image.url }}" class="coupon-image" alt="{{ coupon.name }} Image">
+                            </td>
+                            <td class="align-middle">{{ coupon.name }}</td>
+                            <td class="align-middle">
+                                <button type="button" class="btn btn-dark" data-toggle="modal" data-target="#imageModal{{ coupon.id }}">
+                                    View Coupon
+                                </button>
+                            </td>
+                        </tr>
+
+                        <!-- Image Modal -->
+                        <div class="modal fade" id="imageModal{{ coupon.id }}" tabindex="-1" role="dialog" aria-labelledby="imageModalLabel" aria-hidden="true">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="imageModalLabel">Coupon Image</h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <img src="{{ coupon.code_image.url }}" class="img-fluid" alt="{{ coupon.name }} Image">
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </section>
+</main>
+
+{% include "partials/_footer.html" %} {% endblock %}

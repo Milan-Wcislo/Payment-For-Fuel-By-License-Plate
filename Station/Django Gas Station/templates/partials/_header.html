@@ -1,0 +1,54 @@
+{% load static %}
+
+<header>
+    <nav class="navbar fixed-top navbar-dark">
+        <div class="container">
+            <a class="order-2 navbar-brand text-uppercase condensed" href="{% url 'index' %}"
+                >Station</a
+            >
+            <button
+                class="order-1 custom-toggler navbar-toggler"
+                type="button"
+                data-toggle="collapse"
+                data-target="#navbarSupportedContent"
+                aria-controls="navbarSupportedContent"
+                aria-expanded="false"
+                aria-label="Toggle navigation"
+            >
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div
+                class="order-4 navbar-collapse collapse"
+                id="navbarSupportedContent"
+            >
+                <ul class="navbar-nav mr-auto">
+                    <li class="nav-item">
+                        {% url 'index' as url %}
+                        <a href="{{ url }}"{% if request.path == url %} class="nav-link active"{% else %} class="nav-link" {% endif %}>Home</a>
+                    </li>
+                    <li class="nav-item">
+                        {% url 'products' as url %}
+                        <a href="{{ url }}"{% if request.path == url %} class="nav-link active"{% else %} class="nav-link" {% endif %}>Products</a>
+                    </li>
+                    {% if request.user.is_authenticated %}
+                        <li class="nav-item">
+                            {% url 'user_logout' as url %}
+                            <a href="{{ url }}" class="nav-link">Logout</a>
+                        </li>
+                    {% endif %}
+                </ul>
+            </div>
+            {% if request.user.is_authenticated %}
+                {% url 'coupons' as url %}
+                <a class="order-3 bolt-icon text-uppercase condensed" href="{{ url }}">
+                    <i class="fa-solid fa-bolt"></i> {{ loyalty_program.loyalty_points }}
+                </a>
+            {% else %}
+            {% url 'user_login' as url %}
+            <a class="order-3 bolt-icon text-uppercase condensed" href="{{ url }}">
+                <i class="fa-solid fa-bolt"></i>
+            </a>
+            {% endif %}
+        </div>
+    </nav>
+</header>

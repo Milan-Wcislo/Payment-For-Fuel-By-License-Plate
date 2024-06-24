@@ -1,0 +1,123 @@
+{% include "base.html" %}
+{% block content %}
+
+<section id="simulator-wrap">
+
+    <div class="container-fluid px-0">
+        <div class="row g-0">
+    
+            <!-- First column -->
+            <div class="distributor-wrap col-lg-6 vh-100">
+                <h2 class="text-center mt-3">Pump 1</h2>
+                <div class="fuel-selection">
+                    <select id="fuel-type-1" onchange="updateFuelPrice(1)">
+                        <option value="Petrol">Petrol</option>
+                        <option value="Diesel">Diesel</option>
+                        <option value="Electric">Electric</option>
+                    </select>
+                </div>
+                <button class="pistol-1 btn btn-dark my-3" onclick="togglePistol(this, 1)">Take Pistol</button>
+                <div class="distributor" onclick="toggleDistributorColor(this, 1)"></div>
+                <div class="fuel-count" id="fuel-count-1">Fuel Count: 0 gallons</div>
+                <div class="fuel-price" id="fuel-price-1">Fuel Price: $0</div>
+            </div>
+    
+            <!-- Second column -->
+            <div class="distributor-wrap col-lg-6 vh-100">
+                <h2 class="text-center mt-3">Pump 2</h2>
+                <div class="fuel-selection">
+                    <select id="fuel-type-2" onchange="updateFuelPrice(2)">
+                        <option value="Petrol">Petrol</option>
+                        <option value="Diesel">Diesel</option>
+                        <option value="Electric">Electric</option>
+                    </select>
+                </div>
+                <button class="pistol-2 btn btn-dark my-3" onclick="togglePistol(this, 2)">Take Pistol</button>
+                <div class="distributor" onclick="toggleDistributorColor(this, 2)"></div>
+                <div class="fuel-count" id="fuel-count-2">Fuel Count: 0 gallons</div>
+                <div class="fuel-price" id="fuel-price-2">Fuel Price: $0</div>
+            </div>
+        </div>
+    </div>
+    
+</section>
+
+<script>
+    let fuelCategoryPrices = {
+        "Petrol": {{ controller.petrol_price }},
+        "Diesel": {{ controller.diesel_price }},
+        "Electric": {{ controller.electric_price }},
+    }
+    let fuelCounts = [0, 0];
+    let fuelPrices = [0, 0];
+    let selectedFuelTypes = ["Petrol", "Petrol"];
+
+    function togglePistol(element, pistolNumber) {
+        element.classList.toggle('pistol-taken');
+        console.log('Pistol ' + pistolNumber + ' is ' + element.classList.contains('pistol-taken') + '.');
+
+        if (element.classList.contains('pistol-taken')) {
+            element.textContent = 'Put the Pistol Down';
+        } else {
+            element.textContent = 'Take Pistol';
+            if (fuelCounts[pistolNumber - 1] > 0) {
+                stopCountingFuel(pistolNumber);
+                prepareAPIRequest(pistolNumber);
+            }
+            fuelCounts[pistolNumber - 1] = 0;
+            fuelPrices[pistolNumber - 1] = 0;
+            updateFuelCountDisplay(pistolNumber);
+        }
+    }
+
+    function toggleDistributorColor(element, pumpNumber) {
+        pistol = document.querySelector('.pistol-' + pumpNumber);
+        if (pistol.classList.contains('pistol-taken')) {
+            element.classList.toggle('pump-on');
+            if (element.classList.contains('pump-on')) {
+                startCountingFuel(pumpNumber);
+            } else {
+                stopCountingFuel(pumpNumber);
+            }
+        }
+    }
+  
+    function startCountingFuel(pumpNumber) {
+        let interval = setInterval(() => {
+            fuelCounts[pumpNumber - 1] += 0.1;
+            fuelPrices[pumpNumber - 1] += fuelCategoryPrices[selectedFuelTypes[pumpNumber - 1]] * 0.1;
+            updateFuelCountDisplay(pumpNumber);
+        }, 30); 
+        window['interval' + pumpNumber] = interval;
+    }
+
+    function stopCountingFuel(pumpNumber) {
+        clearInterval(window['interval' + pumpNumber]); 
+    }
+
+    function updateFuelCountDisplay(pumpNumber) {
+        document.getElementById('fuel-count-' + pumpNumber).textContent = 'Fuel Count: ' + fuelCounts[pumpNumber - 1].toFixed(1) + ' gallons';
+        document.getElementById('fuel-price-' + pumpNumber).textContent = 'Fuel Price: $' + fuelPrices[pumpNumber - 1].toFixed(2);
+    }
+
+    function updateFuelPrice(pumpNumber) {
+        selectedFuelTypes[pumpNumber - 1] = document.getElementById('fuel-type-' + pumpNumber).value;
+    }
+
+    function prepareAPIRequest(pumpNumber) {
+        console.log('Pump ' + pumpNumber + ' is turned off. Prepare API request...');
+        $.ajax({
+            type: "POST",
+            url: '/gas_station/{{ station_id }}/prepare_data/' + pumpNumber,
+            data: JSON.stringify({ fuel_price: fuelPrices[pumpNumber - 1], fuel_amount: fuelCounts[pumpNumber - 1] ,fuel_type: selectedFuelTypes[pumpNumber - 1] }),
+            success: function(data) {
+                console.log("Request sent successfully!");
+            },
+            error: function(xhr, status, error) {
+                console.error("Error occurred while sending request:", error);
+            }
+        });
+    }
+</script>
+
+{% endblock %}

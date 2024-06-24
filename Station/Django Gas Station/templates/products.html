@@ -1,0 +1,135 @@
+{% extends "base.html" %} {% block content %} 
+{% include "partials/_header.html" %}
+
+
+<main>
+    <nav id="tags" class="navbar sticky-top pt-5">
+        <div class="container-fluid">
+            <ul class="nav nav-pills d-flex flex-nowrap">
+                {% if categorys %}
+                    {% for category in categorys %}
+                        <li class="nav-item my-1">
+                            <a
+                                class="nav-link btn btn-dark btn-sm text-uppercase condensed"
+                                href="#{{ category.name }}"
+                                >{{ category.name }}</a
+                            >
+                        </li>
+                    {% endfor %}
+                {% else %}
+                    <li class="nav-item my-1">
+                        <p>No categorys available.</p>
+                    </li>
+                {% endif %}
+            </ul>
+        </div>
+    </nav>
+    <section
+        class="products"
+        data-spy="scroll"
+        data-target="#tags"
+        data-offset="0"
+    >
+        <div class="container pb-5">
+            {% if categorys %}
+                {% for category in categorys %}
+                    <section>
+                        <h2 id="{{ category.name }}" class="products-title mt-5 condensed">
+                            {{ category.name }}
+                        </h2>
+                        <hr />
+                        <div class="row row-cols-2 row-cols-lg-3">
+                            {% for product in products %}
+                                {% if product.category.name == category.name %}
+                                    <article class="col my-5">
+                                        <a
+                                            class="article-hyperlink"
+                                            href="#"
+                                            data-toggle="modal"
+                                            data-target="#Modal{{ product.id }}"
+                                        >
+                                            <div class="card mb-3">
+                                                <img
+                                                    src="{{ product.image.url }}"
+                                                    class="products-img-wrap card-img-top"
+                                                    alt="{{ product.name }}"
+                                                />
+                                                <p class="card-footer article-description">
+                                                    {{ product.name }}
+                                                </p>
+                                                <p
+                                                    class="article-price order-3 bolt-icon text-uppercase condensed"
+                                                    href="#"
+                                                >
+                                                    <i class="fa-solid fa-bolt"></i> {{ product.price }}
+                                                </p>
+                                            </div>
+                                        </a>
+                                        <!-- Modal -->
+                                        <div
+                                            class="modal fade"
+                                            id="Modal{{ product.id }}"
+                                            tabindex="-1"
+                                            aria-labelledby="ModalLabel{{ product.id }}"
+                                            aria-hidden="true"
+                                        >
+                                            <div class="modal-dialog modal-dialog-centered">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h5
+                                                            class="modal-title"
+                                                            id="ModalLabel{{ product.id }}"
+                                                        >
+                                                            Are You sure You want to buy: <strong>{{ product.name }}</strong>
+                                                        </h5>
+                                                        <button
+                                                            type="button"
+                                                            class="close"
+                                                            data-dismiss="modal"
+                                                            aria-label="Close"
+                                                        >
+                                                            <span aria-hidden="true">&times;</span>
+                                                        </button>
+                                                    </div>
+                                                    <div class="modal-body">{{ product.description }}</div>
+                                                    <div class="modal-footer">
+                                                        <button
+                                                            type="button"
+                                                            class="modal-close btn btn-secondary"
+                                                            data-dismiss="modal"
+                                                        >
+                                                            Close
+                                                        </button>
+                                                        <a
+                                                            href="checkout.html"
+                                                            type="button"
+                                                            class="btn btn-dark condensed text-uppercase"
+                                                        >
+                                                            <p
+                                                                class="modal-price order-3 bolt-icon text-uppercase condensed mb-0"
+                                                                href="#"
+                                                            >
+                                                                <i class="fa-solid fa-bolt"></i>
+                                                                {{ product.price }}
+                                                            </p>
+                                                        </a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </article>
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+                    </section>
+                {% endfor %}
+            {% else %}
+                <li class="nav-item my-1">
+                    <p>No categorys available.</p>
+                </li>
+            {% endif %}
+        </div>
+    </section>
+</main>
+
+{% include "partials/_footer.html" %} {% endblock %}
